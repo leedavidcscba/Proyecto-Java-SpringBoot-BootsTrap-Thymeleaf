@@ -9,9 +9,11 @@ import com.primerProyecto.tinderMascota.entidades.Mascota;
 import com.primerProyecto.tinderMascota.entidades.Usuario;
 import com.primerProyecto.tinderMascota.entidades.Voto;
 import com.primerProyecto.tinderMascota.errores.ErrorServicio;
+import com.primerProyecto.tinderMascota.repositorios.VotoRepositorio;
 import com.primerProyecto.tinderMascota.servicios.MascotaServicio;
 import com.primerProyecto.tinderMascota.servicios.UsuarioServicio;
 import com.primerProyecto.tinderMascota.servicios.VotoServicio;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +40,9 @@ public class VotoController {
 
     @Autowired
     private VotoServicio votoServicio;
+    
+    @Autowired
+    private VotoRepositorio votoRepositorio;
 
 //    @Autowired
 //    private UsuarioServicio usuarioServicio;
@@ -60,7 +65,8 @@ public class VotoController {
             model.put("idMascota1",idMascota1);
 
         } catch (ErrorServicio ex) {
-            Logger.getLogger(VotoController.class.getName()).log(Level.SEVERE, null, ex);
+           model.put("mensaje", ex.getMessage());
+           return "error.html";
         }
         return "panelVoto.html";
     }
@@ -74,21 +80,26 @@ public class VotoController {
                 return "redirect:/inicio";// si pasa tiempo y no hace nada para vuelva a inicio
             }
             
+            
         try {
             List<Mascota> mascotas = mascotaServicio.buscarPorIdUsuario(login.getId());
-            for (Mascota mascotaAux : mascotas) {
-                List<Voto> listaVotos = votoServicio.buscarVotosPropios(mascotaAux.getId());
-                model.put("listaVotos", listaVotos);
+            List<Voto> listaVotos = new ArrayList<Voto>();
+            for (Mascota mascota : mascotas) {
+                listaVotos.addAll(votoServicio.buscarVotosPropios(mascota.getId()));
             }
+            model.put("accion", "Propios");
+            model.put("listaVotos", listaVotos);
+            return "listavotos.html";
         } catch (ErrorServicio ex) {
-            Logger.getLogger(VotoController.class.getName()).log(Level.SEVERE, null, ex);
+            model.put("mensaje", ex.getMessage());
+            return "error.html";
         }
            
-        return "listaVotos.html";
+        
     }
    
     @GetMapping("/listaVotosRecibidos")
-    public String votosRecibido(HttpSession session, ModelMap model){
+    public String votosRecibido(HttpSession session, ModelMap model, @RequestParam(required = false) String accion){
         
         
         Usuario login = (Usuario) session.getAttribute("usuariosession");
@@ -98,18 +109,18 @@ public class VotoController {
             
         try {
             List<Mascota> mascotas = mascotaServicio.buscarPorIdUsuario(login.getId());
-            List<Voto> listaVotos = null;
-            for (int i=0; i < mascotas.size(); i++) {
-                if(mascotas.get(i) != null){
-                    listaVotos=votoServicio.buscarVotosRecibidos(mascotas.get(i).getId());
-                }
+            List<Voto> listaVotos = new ArrayList<Voto>();
+            for (Mascota mascota : mascotas) {
+                listaVotos.addAll(votoServicio.buscarVotosRecibidos(mascota.getId()));
             }
+            model.put("accion", "Recibidos");
             model.put("listaVotos", listaVotos);
+            
+            return "listavotos.html";
         } catch (ErrorServicio ex) {
-            Logger.getLogger(VotoController.class.getName()).log(Level.SEVERE, null, ex);
+            model.put("mensaje", ex.getMessage());
+            return "error.html";
         }
-           
-        return "listaVotos.html";
     }
     
     @PostMapping("/votar")
@@ -138,8 +149,27 @@ public class VotoController {
 
         }
         
-        votoServicio.buscarVotosRecibidos(idVoto);
-        modelo.put("exito", "Se respondio el voto");
+        try {
+            votoServicio.responder(login.getId(), idVoto);
+         modelo.put("exito", "Se respondio el voto");
+        return "panelVoto.html";
+        } catch (ErrorServicio ex) {
+            modelo.put("mensaje", ex.getMessage());
+            return "error.html";
+        }
+
+        
+    }
+    
+    @GetMapping("/ignorar")
+    public String responderVoto(HttpSession session, ModelMap modelo) {
+        Usuario login = (Usuario) session.getAttribute("usuariosession");
+        if (login == null) {
+            return "redirect:/inicio";// si pasa tiempo y no hace nada para vuelva a inicio
+
+        }
+        
+        modelo.put("exito", "Se ignoro el Voto");
         return "panelVoto.html";
         
     }
