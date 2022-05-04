@@ -152,7 +152,6 @@ public class VotoController {
         
         try {
             votoServicio.responder(login.getId(), idVoto);
-            
          modelo.put("exito", "Se respondio el voto");
         return "panelVoto.html";
         } catch (ErrorServicio ex) {
@@ -168,7 +167,6 @@ public class VotoController {
         Usuario login = (Usuario) session.getAttribute("usuariosession");
         if (login == null) {
             return "redirect:/inicio";// si pasa tiempo y no hace nada para vuelva a inicio
-
         }
         
         modelo.put("exito", "Se ignoro el Voto");

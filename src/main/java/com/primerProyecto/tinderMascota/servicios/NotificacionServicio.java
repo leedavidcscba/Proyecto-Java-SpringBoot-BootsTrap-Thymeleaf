@@ -29,8 +29,6 @@ public class NotificacionServicio {
         mensaje.setFrom("no-reply@tinderdemascotas.com");
         mensaje.setSubject(titulo);
         mensaje.setText(cuerpo);
-        
-        
         mailSender.send(mensaje);
     }
 
