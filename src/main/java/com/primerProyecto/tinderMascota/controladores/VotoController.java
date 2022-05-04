@@ -88,6 +88,7 @@ public class VotoController {
                 listaVotos.addAll(votoServicio.buscarVotosPropios(mascota.getId()));
             }
             model.put("accion", "Propios");
+            
             model.put("listaVotos", listaVotos);
             return "listavotos.html";
         } catch (ErrorServicio ex) {
@@ -151,6 +152,7 @@ public class VotoController {
         
         try {
             votoServicio.responder(login.getId(), idVoto);
+            
          modelo.put("exito", "Se respondio el voto");
         return "panelVoto.html";
         } catch (ErrorServicio ex) {

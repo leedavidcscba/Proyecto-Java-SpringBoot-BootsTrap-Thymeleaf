@@ -30,6 +30,7 @@ public class NotificacionServicio {
         mensaje.setSubject(titulo);
         mensaje.setText(cuerpo);
         
+        
         mailSender.send(mensaje);
     }
 
