@@ -89,6 +89,22 @@ public class VotoServicio {
       }
    }
    
+      public void ignorar(String idUsuario, String idVoto) throws ErrorServicio{
+      Optional<Voto> respuesta = votoRepositorio.findById(idVoto);
+      if(respuesta.isPresent()){
+          Voto voto = respuesta.get();
+          
+          if(voto.getMascota2().getUsuario().getId().equals(idUsuario)){
+            notificacionServicio.enviar("Tu voto NO fue correspondido", "Tinder de Mascota", voto.getMascota1().getUsuario().getMail());
+
+          }else{
+             throw new ErrorServicio("No tiene permiso para realizar la operacion"); 
+          }      
+      }else{
+          throw new ErrorServicio("No existe el voto solicitado");
+      }
+   }
+   
    public List<Voto> buscarVotosPropios(String id){
        return votoRepositorio.buscarVotosPropios(id);
    }

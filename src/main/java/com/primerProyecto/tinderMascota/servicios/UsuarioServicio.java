@@ -69,7 +69,7 @@ public class UsuarioServicio implements UserDetailsService{//
         usuario.setFoto(foto);
         usuarioRepositorio.save(usuario);
         
-        //notificacionServicio.enviar("Bienvenido al Tinder de Mascota", "Tinder de Mascota", usuario.getMail());
+        notificacionServicio.enviar("Bienvenido al Tinder de Mascota", "Tinder de Mascota", usuario.getMail());
     }
 
     @Transactional

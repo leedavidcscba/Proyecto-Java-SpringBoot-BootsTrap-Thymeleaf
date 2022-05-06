@@ -58,6 +58,10 @@
   </header>
 
   <section>
+    <br>
+    <p th:if="${error != null}" th:text="${error}" style="color:red" align="center"></p>
+    <p th:if="${exito != null}" th:text="${exito}" style="color:green" align="center"></p>
+
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-6 order-lg-2">

@@ -83,8 +83,15 @@ public class MascotaController {
         }
         
         List<Mascota> mascotas = mascotaServicio.buscarPorIdUsuario(login.getId());
+        if(mascotas.isEmpty() || mascotas == null){
+            model.put("error", "No tenes ninguna mascota cargada");
+                    model.put("mascotas", mascotas);    
+                return "mascotas";
+        }else{
+        
         model.put("mascotas", mascotas);    
         return "mascotas";
+        }
     }
     
     @PostMapping("/actualizar-perfil")

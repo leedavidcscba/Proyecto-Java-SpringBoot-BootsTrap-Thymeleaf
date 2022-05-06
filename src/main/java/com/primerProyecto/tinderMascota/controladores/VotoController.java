@@ -11,6 +11,7 @@ import com.primerProyecto.tinderMascota.entidades.Voto;
 import com.primerProyecto.tinderMascota.errores.ErrorServicio;
 import com.primerProyecto.tinderMascota.repositorios.VotoRepositorio;
 import com.primerProyecto.tinderMascota.servicios.MascotaServicio;
+import com.primerProyecto.tinderMascota.servicios.NotificacionServicio;
 import com.primerProyecto.tinderMascota.servicios.UsuarioServicio;
 import com.primerProyecto.tinderMascota.servicios.VotoServicio;
 import java.util.ArrayList;
@@ -44,9 +45,9 @@ public class VotoController {
     @Autowired
     private VotoRepositorio votoRepositorio;
 
-//    @Autowired
-//    private UsuarioServicio usuarioServicio;
-//
+    @Autowired
+    private NotificacionServicio notificacionServicio;
+
     @Autowired
     private MascotaServicio mascotaServicio;
     
@@ -87,10 +88,19 @@ public class VotoController {
             for (Mascota mascota : mascotas) {
                 listaVotos.addAll(votoServicio.buscarVotosPropios(mascota.getId()));
             }
+            
+            if(listaVotos.isEmpty() || listaVotos == null){
+                model.put("error", "No has realizado Ningun Voto");
+                model.put("accion", "Propios");
+                model.put("listaVotos", listaVotos);
+                return "listavotos.html";
+            }else{
+            
             model.put("accion", "Propios");
             
             model.put("listaVotos", listaVotos);
             return "listavotos.html";
+            }
         } catch (ErrorServicio ex) {
             model.put("mensaje", ex.getMessage());
             return "error.html";
@@ -114,10 +124,18 @@ public class VotoController {
             for (Mascota mascota : mascotas) {
                 listaVotos.addAll(votoServicio.buscarVotosRecibidos(mascota.getId()));
             }
+            if(listaVotos.isEmpty() || listaVotos == null){
+                model.put("error", "Sus mascotas no han recibido ningun Voto");
+                model.put("accion", "Recibidos");
+                model.put("listaVotos", listaVotos);
+                return "listavotos.html";
+            }else{
+            
             model.put("accion", "Recibidos");
             model.put("listaVotos", listaVotos);
             
             return "listavotos.html";
+            }
         } catch (ErrorServicio ex) {
             model.put("mensaje", ex.getMessage());
             return "error.html";
@@ -162,15 +180,20 @@ public class VotoController {
         
     }
     
-    @GetMapping("/ignorar")
-    public String responderVoto(HttpSession session, ModelMap modelo) {
+    @PostMapping("/ignorarVoto")
+    public String ignorarVoto(HttpSession session, ModelMap modelo, @RequestParam String idVoto) {
         Usuario login = (Usuario) session.getAttribute("usuariosession");
         if (login == null) {
             return "redirect:/inicio";// si pasa tiempo y no hace nada para vuelva a inicio
         }
-        
-        modelo.put("exito", "Se ignoro el Voto");
-        return "panelVoto.html";
+        try {
+            votoServicio.ignorar(login.getId(), idVoto);
+                    modelo.put("exito", "Se ignoro el Voto");
+                    return "panelVoto.html";
+        } catch (ErrorServicio ex) {
+            modelo.put("mensaje", ex.getMessage());
+            return "error.html";
+        }
         
     }
     

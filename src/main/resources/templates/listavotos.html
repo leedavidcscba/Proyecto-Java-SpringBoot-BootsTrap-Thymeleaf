@@ -60,8 +60,9 @@
   </header>
 
   <section>
-    <p th:if="${error != null}" th:text="${error}" style="color:red"></p>
-    <p th:if="${exito != null}" th:text="${exito}" style="color:green"></p>
+    <br>
+    <p th:if="${error != null}" th:text="${error}" style="color:red" align="center"></p>
+    <p th:if="${exito != null}" th:text="${exito}" style="color:green" align="center"></p>
 
     <div class="container">
       <div class="row align-items-center">
@@ -115,8 +116,11 @@
                           <button th:if="${listaVotosAux.respuesta} == null" type="submit" class="btn btn-link">Responder</button>
                           <button th:if="${listaVotosAux.respuesta} != null" type="submit" class="btn btn-link" disabled>Responder</button>
                         </form> 
-                        <button th:if="${listaVotosAux.respuesta} == null" type="submit" th:href="@{/voto/ignorar}"> - Ignorar</button>
-                        <button th:if="${listaVotosAux.respuesta} != null" type="submit" th:href="@{/voto/ignorar}" class="btn btn-link" disabled> - Ignorar</button>
+                        <form th:action="@{/voto/ignorarVoto}" method="post">
+                          <input type="hidden" name="idVoto" th:value="${listaVotosAux.id}"/>
+                        <button th:if="${listaVotosAux.respuesta} == null" type="submit" class="btn btn-link"> - Ignorar</button>
+                        <button th:if="${listaVotosAux.respuesta} != null" type="submit" class="btn btn-link" disabled> - Ignorar</button>
+                      </form>
                       </td>
                     </tr>
                   </div>
