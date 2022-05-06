@@ -144,6 +144,10 @@
                       <td>
                         <span th:if="${listaVotosAux.respuesta} == null">Sin Contestar</span>
                         <span th:unless="${listaVotosAux.respuesta} == null">Si!, Match</span>
+                        <form th:if="${listaVotosAux.respuesta} != null" th:action="@{/voto/eliminarVoto}" method="post">
+                          <input type="hidden" name="idVoto" th:value="${listaVotosAux.id}"/>
+                        <button type="submit" class="btn btn-link text-danger"> - Eliminar</button>
+                      </form>
                       </td> 
                         <td>
                             <p th:if="${listaVotosAux.respuesta} != null" th:text="${listaVotosAux.mascota2.usuario.nombre} + ' ' +${listaVotosAux.mascota2.usuario.mail}"></p>

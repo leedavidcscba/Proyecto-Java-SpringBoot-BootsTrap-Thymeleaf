@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -33,7 +34,7 @@ public class VotoServicio {
     @Autowired
     private VotoRepositorio votoRepositorio;
     
-  
+  @Transactional
    public void votar(String idUsuario, String idMascota1, String idMascota2) throws ErrorServicio{
     Voto voto = new Voto();
     voto.setFecha(new Date());
@@ -70,7 +71,7 @@ public class VotoServicio {
     votoRepositorio.save(voto);
    }    
     
-  
+  @Transactional
    public void responder(String idUsuario, String idVoto) throws ErrorServicio{
       Optional<Voto> respuesta = votoRepositorio.findById(idVoto);
       if(respuesta.isPresent()){
@@ -104,6 +105,22 @@ public class VotoServicio {
           throw new ErrorServicio("No existe el voto solicitado");
       }
    }
+      
+      
+   @Transactional
+    public void eliminar(String idUsuario, String idVoto) throws ErrorServicio{
+        Optional<Voto> respuesta = votoRepositorio.findById(idVoto);
+        if(respuesta.isPresent()){
+            Voto voto = respuesta.get();
+   
+                               
+                votoRepositorio.delete(voto);
+            
+        }else{
+            throw new ErrorServicio("No existe un voto con el identificador solicitado");
+        }
+    }   
+      
    
    public List<Voto> buscarVotosPropios(String id){
        return votoRepositorio.buscarVotosPropios(id);

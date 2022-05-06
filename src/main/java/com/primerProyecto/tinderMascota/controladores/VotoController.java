@@ -197,4 +197,21 @@ public class VotoController {
         
     }
     
+    @PostMapping("/eliminarVoto")
+    public String eliminarVoto(HttpSession session, ModelMap modelo, @RequestParam String idVoto) {
+        Usuario login = (Usuario) session.getAttribute("usuariosession");
+        if (login == null) {
+            return "redirect:/inicio";// si pasa tiempo y no hace nada para vuelva a inicio
+        }
+        try {
+            votoServicio.eliminar(login.getId(), idVoto);
+                    modelo.put("exito", "Se Elimino el Voto");
+                    return "panelVoto.html";
+        } catch (ErrorServicio ex) {
+            modelo.put("mensaje", ex.getMessage());
+            return "error.html";
+        }
+        
+    }
+    
 }
