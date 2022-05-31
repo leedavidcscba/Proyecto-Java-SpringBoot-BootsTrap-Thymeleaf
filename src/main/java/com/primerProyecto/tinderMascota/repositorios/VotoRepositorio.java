@@ -25,4 +25,6 @@ public interface VotoRepositorio extends JpaRepository<Voto, String> {
     
     @Query("SELECT c FROM Voto c WHERE c.mascota2.id = :id ORDER BY c.fecha DESC")
     public List<Voto> buscarVotosRecibidos(@Param("id") String id);
+    
+    
 }

@@ -99,6 +99,7 @@ public class UsuarioServicio implements UserDetailsService{//
             usuario.setFoto(foto);
             
             usuarioRepositorio.save(usuario);
+            notificacionServicio.enviar("Se Modifico su Usuario de Tinder de Mascota", "Tinder de Mascota", usuario.getMail());
         } else {
             throw new ErrorServicio("No se encontro el usuario solicitado");
         }
