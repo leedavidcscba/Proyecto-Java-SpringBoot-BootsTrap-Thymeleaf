@@ -50,6 +50,7 @@
         <h2 class="masthead-subheading mb-0" th:if="${session.usuariosession != null}"
           th:text="${session.usuariosession.nombre + ' ' + session.usuariosession.apellido}"></h2>
         <input type="hidden" name="id" th:value="${session.usuariosession.id}" />
+
         <a th:href="@{/usuario/editar-perfil(id=${session.usuariosession.id})}"
           class="btn btn-primary btn-xl rounded-pill mt-5">¡Configura tu Perfil!</a>
         <a th:href="@{/mascota/editar-perfil}" class="btn btn-primary btn-xl rounded-pill mt-5">¡Agregar una
@@ -80,7 +81,7 @@
       <!-- Modal content ModalElegirMascotaParaVotar-->
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="btn-close btn-close-black" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Elige tu Mascota para Votar</h4>
         </div>
         <div class="col-md-5">
